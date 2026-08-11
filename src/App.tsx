@@ -1,232 +1,81 @@
-// 1st: COVER SEMANTIC TAGS AS WELL AND SAY HOW IT HELPS IN SEO
-
 import { useEffect, useState } from "react";
-
-// 2nd: COVER REACT FOLDER STRUCTURE (FROM THIS AND USE AVINTO CARRERS-FRONTEND REPO) TO SHOW REAL PROD APP
-
-// 3rd: GAME FOLDER STRUCTURE
-
-// 4TH a simple fragment
-// export default function App() {
-//   return (
-//     <>
-//       <h1>Hello</h1>
-//       <p>World</p>
-//     </>
-//   );
-// }
-
-// 5TH
-// {
-//   /* <button onClick={handleLikeClicked} className="like-button">
-//         👎 Dislike
-//       </button> */
-// }
-
-// export default function App() {
-//   const [likes, setLikes] = useState(0);
-//   const handleLikeClicked = () => {
-//     setLikes(likes + 1);
-//   };
-
-//   return (
-//     <>
-//       <p>Global Like: {likes}</p>
-//       <LikeButton onLikeClicked={handleLikeClicked} />
-//       <LikeButton onLikeClicked={handleLikeClicked} />
-//     </>
-//   );
-// }
-
-// export default function App() {
-//   const [likes, setLikes] = useState<number>(0);
-
-//   const handleLikeClicked = () => {
-//     setLikes(likes + 1);
-//   };
-
-//   return (
-//     <>
-//       <LikeButton  />
-//     </>
-//   );
-
-interface Services {
-  id: string;
-  name: string;
-  category: string;
-  rating: number;
-  reviewCount: number;
-  address: string;
-  phone: string;
-  imageUrl: string;
-  price: number;
-  distanceMiles: number;
-  tags: String[];
-}
+import SearchBar from "./components/SearchBar";
+import Filter from "./components/Filter";
+import Card from "./components/Card";
+import type { Service } from "./type";
+import "./App.css";
 
 export default function App() {
-  const [services, setServices] = useState<Services[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   fetch("http://localhost:3000/services")
-  //     .then((res) => {
-  //       if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-  //       return res.json();
-  //     })
-  //     .then((data: Services[]) => {
-  //       setServices(data);
-  //     })
-  //     .catch((error) => {
-  //       if (error instanceof Error) setError(error.message);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // }, []);
-
-  async function fetchServices() {
-    try {
-      setIsLoading(true);
-      const response = await fetch("http://localhost:3000/services");
-
-      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-
-      const services = await response.json();
-      setServices(services);
-    } catch (error: unknown) {
-      if (error instanceof Error) setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [minRating, setMinRating] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    fetchServices();
+    fetch("http://localhost:3000/services")
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(setServices)
+      .catch(() => setError("Failed to load services."))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (isLoading) {
-    return <>Loading.....</>;
-  }
+  if (loading) return <p className="message text-gray">Loading...</p>;
+  if (error) return <p className="message text-red">{error}</p>;
 
-  if (error != null)
-    return (
-      <>
-        <h1>Something went wrong: {error}</h1>
-      </>
-    );
-
-  if (services != null && services.length == 0) {
-    return (
-      <>
-        <h1>No data</h1>
-      </>
-    );
-  }
+  const categories = ["All", ...new Set(services.map(s => s.category))];
+  
+  const filtered = services
+    .filter(s => (category === "All" || s.category === category))
+    .filter(s => s.name.toLowerCase().includes(search.toLowerCase()))
+    .filter(s => s.rating >= minRating)
+    .sort((a, b) => b.rating - a.rating);
 
   return (
-    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3">
-      {services?.map((service) => (
-        <div
-          key={service.id}
-          className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
-        >
-          <img
-            src={service.imageUrl}
-            alt={service.name}
-            className="h-40 w-full object-cover"
-          />
-
-          <div className="p-4">
-            <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-              {service.tags[0]}
-            </span>
-
-            <h3 className="mt-2 text-lg font-semibold text-gray-900">
-              {service.name}
-            </h3>
-
-            <div className="mt-1 flex items-center gap-1 text-sm text-gray-600">
-              <span className="text-yellow-500">★</span>
-              <span className="font-medium">{service.rating}</span>
-              <span className="text-gray-400">
-                ({service.reviewCount} reviews)
-              </span>
-            </div>
-
-            <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
-              <span>{service.distanceMiles} mi away</span>
-              <span className="font-semibold text-gray-900">
-                ${service.price}
-              </span>
-            </div>
+    <main className="app-container">
+      <header className="header">
+        <div className="header-top">
+          
+          <div className="logo-wrapper">
+            <svg className="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+            </svg>
+            <span className="logo-text">Servio</span>
+            
+            <SearchBar search={search} 
+            setSearch={setSearch} />
           </div>
+
+          <button onClick={() => setShowFilters(!showFilters)} className="filter-btn" aria-label="Toggle filters">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+              <circle cx="9" cy="6" r="2" fill="currentColor" />
+              <circle cx="15" cy="12" r="2" fill="currentColor" />
+              <circle cx="9" cy="18" r="2" fill="currentColor" />
+            </svg>
+          </button>
         </div>
-      ))}
-    </div>
+
+        {showFilters && (
+          <Filter 
+            category={category} 
+            setCategory={setCategory} 
+            categories={categories} 
+            minRating={minRating} 
+            setMinRating={setMinRating} 
+          />
+        )}
+      </header>
+      
+      {filtered.length === 0 ? (
+        <p className="empty-state">No service available</p>
+      ) : (
+        <section className="services-grid">
+          {filtered.map(s => <Card key={s.id} service={s} />)}
+        </section>
+      )}
+    </main>
   );
 }
-
-// import { useState, useRef } from "react";
-
-// export default function App() {
-//   const [seconds, setSeconds] = useState(0);
-//   const [running, setRunning] = useState(false);
-//   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-//   function tick(current: number) {
-//     const next = current + 1;
-//     setSeconds(next);
-//     timeoutId.current = setTimeout(() => tick(next), 1000);
-//   }
-
-//   function stop() {
-//     if (timeoutId.current !== null) {
-//       clearTimeout(timeoutId.current);
-//       timeoutId.current = null;
-//     }
-//     setRunning(false);
-//   }
-
-//   function start() {
-//     if (timeoutId.current !== null) {
-//       clearTimeout(timeoutId.current);
-//       timeoutId.current = null;
-//     }
-//     setSeconds(0);
-//     setRunning(true);
-//     timeoutId.current = setTimeout(() => tick(0), 1000);
-//   }
-
-//   function reset() {
-//     stop();
-//     setSeconds(0);
-//   }
-
-//   return (
-//     <div className="device">
-//       <div className="eyebrow">
-//         <span className={`dot ${running ? "live" : ""}`}></span>
-//         <span>{running ? "Running" : "Idle"}</span>
-//       </div>
-
-//       <div className="readout">{seconds}</div>
-//       <div className="unit">seconds elapsed</div>
-
-//       <div className="controls">
-//         <button className={running ? "running" : ""} onClick={start}>
-//           {running ? "Restart" : "Start"}
-//         </button>
-//         <button onClick={reset}>Reset</button>
-//       </div>
-
-//       <div className="note">
-//         Restarting while running cancels the previous run.
-//       </div>
-//     </div>
-//   );
-// }

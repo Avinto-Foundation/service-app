@@ -1,0 +1,255 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+/* Layout & Containers */
+.app-container {
+  padding: 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.header-top {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+/* Logo & Header Layout */
+.logo-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.logo-icon {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-weight: bold;
+  font-size: 1.25rem;
+  display: none; /* Hidden on mobile by default (equivalent to hidden sm:block) */
+}
+
+@media (min-width: 640px) {
+  .logo-text {
+    display: block; /* Shows the "Servio" text on larger screens */
+  }
+}
+
+.search-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Messages & Empty States */
+.message {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.text-gray {
+  color: #6b7280;
+}
+
+.text-red {
+  color: #ef4444;
+}
+
+.empty-state {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 5rem;
+  font-size: 1.125rem;
+}
+
+/* Buttons */
+.filter-btn {
+  background: #2563eb;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-btn:hover {
+  background: #1d4ed8;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-active {
+  color: white;
+}
+
+.btn-inactive {
+  background: #e5e7eb;
+  color: black;
+}
+
+.btn-blue.btn-active {
+  background: #2563eb;
+}
+
+.btn-green.btn-active {
+  background: #16a34a;
+}
+
+.contact-btn {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: auto;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background: #2563eb;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.contact-btn:hover {
+  background: #1d4ed8;
+}
+
+/* Filters */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Search Bar */
+.search-bar {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.625rem;
+  color: #9ca3af;
+}
+
+.search-input {
+  width: 100%;
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: white;
+}
+
+.card-img {
+  width: 100%;
+  height: 8rem;
+  object-fit: cover;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0.75rem;
+}
+
+.badge {
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
+  border-radius: 9999px;
+  background: #dbeafe;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #1d4ed8;
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.card-rating {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.text-muted {
+  color: #6b7280;
+}
+
+.text-bold {
+  font-weight: bold;
+  color: #111827;
+}
