@@ -14,16 +14,26 @@ export default function Home() {
   const [minRating, setMinRating] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
 
+  async function fetchServices() {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/services");
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+      const services = await response.json();
+      setServices(services);
+    } catch (error: unknown) {
+      if (error instanceof Error) setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    fetch("http://localhost:3000/services")
-    
-      .then(res =>  res.json())
-      .then(data => {
-        setServices(data);
-      })
-      .catch(() => setError("Failed to load services."))
-      .finally(() => setLoading(false));
+    fetchServices();
   }, []);
+
   
 
 
