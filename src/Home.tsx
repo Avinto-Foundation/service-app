@@ -17,18 +17,27 @@ export default function Home() {
   async function fetchServices() {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/services");
+      const res= await fetch("http://127.0.0.1:8000/api/services/");
+      const data=await res.json();
 
-      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-
-      const services = await response.json();
-      setServices(services);
-    } catch (error: unknown) {
-      if (error instanceof Error) setError(error.message);
-    } finally {
+      setServices(data.map((s:any)=>({
+        id:s.id,
+        name:s.name,
+        category:s.category?.label ||"",
+        rating:s.rating,
+        reviewCount:s.review_count,
+        distanceMiles:s.distance_miles,
+        price:s.price,
+        imageUrl:s.image_url || "https://via.placeholder.com/400"
+      })));
+    }catch(err){
+      setError("Failed to fetch");
+    }finally{
       setLoading(false);
     }
   }
+
+     
 
   useEffect(() => {
     fetchServices();
