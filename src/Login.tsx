@@ -8,7 +8,7 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (loading) return; // Prevent double click
+    if (loading) return;
     
     setLoading(true);
     setError("");
@@ -18,7 +18,7 @@ export default function Login() {
       const email = (form.elements.namedItem("email") as HTMLInputElement).value;
       const password = (form.elements.namedItem("password") as HTMLInputElement).value;
 
-      const res = await fetch("http://127.0.0.1:8000/api/login/", {
+      const res = await fetch("http://127.0.0.1:8000/api/accounts/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: email, password: password }),
@@ -42,23 +42,16 @@ export default function Login() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#f3f4f6", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "sans-serif" }}>
-      
       <form onSubmit={handleSubmit} style={{ background: "white", padding: "40px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)", width: "100%", maxWidth: "420px" }}>
-        
         <h2 style={{ marginTop: 0, marginBottom: "20px", textAlign: "center" }}>Welcome Back</h2>
-        
         {error && <p style={{ color: "red", background: "#fee2e2", padding: "10px", borderRadius: "6px", fontSize: "14px", marginBottom: "20px" }}>{error}</p>}
-
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Email Address</label>
-        <input type="email" name="email" required style={inputStyle} />
-        
+        <input type="email" name="email" required style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Password</label>
-        <input type="password" name="password" required style={inputStyle} />
-        
+        <input type="password" name="password" required style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         <button type="submit" disabled={loading} style={{ width: "100%", padding: "12px", background: loading ? "#93c5fd" : "#3b82f6", color: "white", border: "none", borderRadius: "8px", fontSize: "16px", fontWeight: "bold", cursor: loading ? "not-allowed" : "pointer", marginTop: "10px" }}>
           {loading ? "Logging in..." : "Login"}
         </button>
-        
         <p style={{ textAlign: "center", marginTop: "20px", fontSize: "14px", color: "#6b7280" }}>
           Don't have an account? <Link to="/signup" style={{ color: "#3b82f6", textDecoration: "none", fontWeight: "600" }}>Signup here</Link>
         </p>
@@ -66,5 +59,3 @@ export default function Login() {
     </div>
   );
 }
-
-const inputStyle = { width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box" as const, fontSize: "14px" };

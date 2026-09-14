@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "./components/SearchBar";
 import Filter from "./components/Filter";
 import Card from "./components/Card";
@@ -6,7 +7,8 @@ import type { Service } from "./type";
 import "./App.css";
 
 export default function Home() {
-    const [services, setServices] = useState<Service[]>([]);
+  const navigate = useNavigate();
+  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -14,45 +16,34 @@ export default function Home() {
   const [minRating, setMinRating] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
 
-  async function fetchServices() {
-    try {
-      setLoading(true);
-      const res= await fetch("http://127.0.0.1:8000/api/services/");
-      const data=await res.json();
-
-      setServices(data.map((s:any)=>({
-        id:s.id,
-        name:s.name,
-        category:s.category?.label ||"",
-        rating:s.rating,
-        reviewCount:s.review_count,
-        distanceMiles:s.distance_miles,
-        price:s.price,
-        imageUrl:s.image_url || "https://via.placeholder.com/400"
-      })));
-    }catch(err){
-      setError("Failed to fetch");
-    }finally{
-      setLoading(false);
-    }
-  }
-
-     
-
   useEffect(() => {
-    fetchServices();
+    fetch("http://127.0.0.1:8000/api/services/")
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then(data => {
+        // THIS IS THE MAGIC: It translates Django's underscores to React's camelCase
+        const fixedData = data.map((s: any) => ({
+          ...s,
+          imageUrl: s.imageUrl || s.image_url,
+          reviewCount: s.reviewCount || s.review_count,
+          distanceMiles: s.distanceMiles || s.distance_miles
+        }));
+        setServices(fixedData);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
   }, []);
-
-  
-
 
   if (loading) return <p className="message text-gray">Loading...</p>;
   if (error) return <p className="message text-red">{error}</p>;
 
-  // get unique categories from services for the filter
- const categories = ["All", ...new Set(services.map(s => s.category))];
+  const categories = ["All", ...new Set(services.map(s => s.category))];
 
-  // filter services based on search, category, and minRating
   const filtered = services
     .filter(s => (category === "All" || s.category === category))
     .filter(s => s.name.toLowerCase().includes(search.toLowerCase()))
@@ -71,39 +62,35 @@ export default function Home() {
             <SearchBar search={search} setSearch={setSearch} />
           </div>
 
-      <button onClick={() => setShowFilters(!showFilters)} className="filter-btn">Filter</button>
-
+          <button onClick={() => navigate('/login')} className="filter-btn">Login</button>
+          <button onClick={() => navigate('/signup')} className="filter-btn">Signup</button>
+          <button onClick={() => setShowFilters(!showFilters)} className="filter-btn">Filter</button>
         </div>
+        
         {showFilters && (
           <Filter 
-            category={category} 
-            setCategory={setCategory} 
+            category={category} setCategory={setCategory} 
             categories={categories} 
-            minRating={minRating} 
-            setMinRating={setMinRating} 
+            minRating={minRating} setMinRating={setMinRating} 
           />
         )}
       </header>
       
-      
       <div className="content-layout">
         <section className="services-grid">
           {filtered.length === 0 ? (
-            <p className="empty-state" style={{ textAlign: "center" }}>
-              No service available
-            </p>
+            <p className="empty-state" style={{ textAlign: "center" }}>No service available</p>
           ) : (
             filtered.map(s => <Card key={s.id} service={s} />)
           )}
         </section>
+
         {showFilters && (
           <Filter 
             isSidebar={true}
-            category={category} 
-            setCategory={setCategory} 
+            category={category} setCategory={setCategory} 
             categories={categories} 
-            minRating={minRating} 
-            setMinRating={setMinRating} 
+            minRating={minRating} setMinRating={setMinRating} 
             onApply={() => setShowFilters(false)}
           />
         )}

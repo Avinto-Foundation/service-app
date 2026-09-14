@@ -17,7 +17,7 @@ export default function Signup() {
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
 
-      const res = await fetch("http://127.0.0.1:8000/api/signup/", {
+      const res = await fetch("http://127.0.0.1:8000/api/accounts/signup/", {
         method: "POST",
         body: formData, 
       });
@@ -35,35 +35,33 @@ export default function Signup() {
       }
     } catch (err) {
       setLoading(false);
-      setError("Error: " + String(err)); // If it fails, this will show the REAL reason
+      setError("Error: " + String(err));
     }
   };
 
   return (
     <div style={{ minHeight: "100vh", background: "#f3f4f6", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "sans-serif" }}>
       <form onSubmit={handleSubmit} style={{ background: "white", padding: "40px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)", width: "100%", maxWidth: "420px" }}>
-        
         <h2 style={{ marginTop: 0, marginBottom: "20px", textAlign: "center" }}>Create Account</h2>
-        
         {error && <p style={{ color: "red", background: "#fee2e2", padding: "10px", borderRadius: "6px", fontSize: "14px", marginBottom: "20px" }}>{error}</p>}
-
+        
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Email</label>
-        <input type="email" name="email" required style={inputStyle} />
+        <input type="email" name="email" required style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Username</label>
-        <input type="text" name="username" required style={inputStyle} />
+        <input type="text" name="username" required style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Password (Min 8 chars, 1 Upper, 1 Number)</label>
-        <input type="password" name="password" required style={inputStyle} />
+        <input type="password" name="password" required style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Confirm Password</label>
-        <input type="password" name="confirm_password" required style={inputStyle} />
+        <input type="password" name="confirm_password" required style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Phone Number (10 digits)</label>
-        <input type="text" name="phone_number" style={inputStyle} />
+        <input type="text" name="phone_number" style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px" }} />
         
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Bio (Optional)</label>
-        <textarea name="bio" style={{...inputStyle, height: "80px", resize: "vertical" as const}}></textarea>
+        <textarea name="bio" style={{ width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box", fontSize: "14px", height: "80px", resize: "vertical" }}></textarea>
         
         <label style={{ display: "block", marginBottom: "5px", fontWeight: "500", fontSize: "14px" }}>Profile Picture (Optional)</label>
         <input type="file" name="profile_picture" accept="image/png, image/jpeg" style={{ marginBottom: "20px" }} />
@@ -79,5 +77,3 @@ export default function Signup() {
     </div>
   );
 }
-
-const inputStyle = { width: "100%", padding: "10px", marginBottom: "15px", border: "1px solid #d1d5db", borderRadius: "8px", boxSizing: "border-box" as const, fontSize: "14px" };
