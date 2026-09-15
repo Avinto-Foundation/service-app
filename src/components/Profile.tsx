@@ -56,7 +56,7 @@ export default function Profile() {
 
           <h3 className="sidebar-heading">About this service</h3>
           <p className="text-muted" style={{ lineHeight: "1.7" }}>
-            {service.description || `${service.name} is located at ${service.address}. You can contact them at ${service.phone}. They are ${service.distanceMiles} miles away.`}
+            {(service as any).description || `${service.name} is located at ${service.address}. You can contact them at ${service.phone}. They are ${service.distanceMiles} miles away.`}
           </p>
         </div>
       </div>
