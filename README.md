@@ -1,75 +1,72 @@
-# React + TypeScript + Vite
+# Servio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Browse, search, and filter local home services — plumbers, electricians, cleaners — and view detailed profiles.
 
-Currently, two official plugins are available:
+> React frontend for the ServiceFinder Django API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick Start
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+git clone https://github.com/you/service-app.git
+cd service-app
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+App runs at http://localhost:5173
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+⚠️ **The Django backend must be running at http://127.0.0.1:8000** — see the backend README first.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Docker:**
+
+```bash
+docker build -t service-app .
+docker run -p 5173:5173 service-app
+```
+
+## Setup
+
+**Requirements:** Node 20+
+
+## Configuration
+
+The backend URL is hardcoded (`http://127.0.0.1:8000`) in `Home.tsx`, `Profile.tsx`, `Login.tsx`, and `Signup.tsx`. Change it there if your backend runs elsewhere.
+
+## Usage
+
+| Page | Route | Description |
+|---|---|---|
+| Home | `/` | Search, filter by category/rating, view service cards |
+| Profile | `/profile/:id` | Service details |
+| Login | `/login` | Email + password login |
+| Signup | `/signup` | Create account (with profile picture) |
+
+## Folder Structure
 
 ```
+├── src/
+│   ├── components/
+│   │   ├── Card.tsx        # service card
+│   │   ├── Filter.tsx      # category + rating filters
+│   │   ├── Profile.tsx     # service detail page
+│   │   └── SearchBar.tsx   # search input
+│   ├── Home.tsx            # main page
+│   ├── Login.tsx
+│   ├── Signup.tsx
+│   ├── App.tsx             # routes
+│   ├── type.ts             # Service type
+│   └── App.css
+├── Dockerfile
+├── vite.config.ts
+└── package.json
+```
+
+## Troubleshooting
+
+- **"Cannot connect to server"** → the Django backend isn't running. Start it on port 8000.
+- **CORS errors in browser console** → make sure the backend has `CORS_ALLOW_ALL_ORIGINS = True` (or allows `http://localhost:5173`).
+- **Empty service list** → backend has no data. Run `python manage.py loaddata seed_data.json` in the backend.
+
+## Contributing
+
+Branch from `main`, name it `feature/...` or `fix/...`, and open a PR.
