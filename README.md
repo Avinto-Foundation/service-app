@@ -20,8 +20,8 @@ App runs at http://localhost:5173
 **Docker:**
 
 ```bash
-docker build -t service-app .
-docker run -p 5173:5173 service-app
+docker build -t my-image .
+docker run -p 5173:5173 my-image
 ```
 
 ## Setup
