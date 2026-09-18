@@ -15,13 +15,12 @@ npm run dev
 
 App runs at http://localhost:5173
 
-⚠️ **The Django backend must be running at http://127.0.0.1:8000** — see the backend README first.
-
+ **The Django backend must be running at http://127.0.0.1:8000** 
 **Docker:**
 
 ```bash
-docker build -t my-image .
-docker run -p 5173:5173 my-image
+docker build -t service-app .
+docker run -p 5173:5173 service-app
 ```
 
 ## Setup
