@@ -2,7 +2,7 @@
 
 Browse, search, and filter local home services — plumbers, electricians, cleaners — and view detailed profiles.
 
-> React frontend for the ServiceFinder Django API.
+> React frontend for the Service Django API.
 
 ## Quick Start
 
